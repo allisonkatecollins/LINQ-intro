@@ -20,7 +20,7 @@ namespace linq_intro
             where fruit.StartsWith("L")
             select fruit;
 
-           /*  Console.WriteLine("Fruits that begin with 'L':");
+           /* 
             foreach(string fruit in LFruits) {
               Console.WriteLine(fruit);
             } */
@@ -34,7 +34,7 @@ namespace linq_intro
           IEnumerable<int> fourSixMultiples = 
           numbers.Where(number => number % 4 == 0 | number % 6 == 0);
 
-          /* Console.WriteLine("Multiples of 4 or 6:");
+          /* 
           foreach(int number in fourSixMultiples) {
             Console.WriteLine(number);
           } */
@@ -72,6 +72,7 @@ namespace linq_intro
           } */
 
           /*********AGGREGATE OPERATIONS*********/
+
           // Output how many numbers are in this list
           List<int> numbersQuantity = new List<int>()
           {
@@ -94,8 +95,82 @@ namespace linq_intro
               879.45, 9442.85, 2454.63, 45.65, 2340.29, 34.03, 4786.45, 745.31, 21.76
           };
 
-          Console.WriteLine(prices.Max());
+          //Console.WriteLine(prices.Max());
+
+          /*********PARTITIONING OPERATIONS*********/
+
+          /*
+              Store each number in the following List until a perfect square
+              is detected.
+          */
+
+          //TakeWhile stops when the condition is false
+          //Expression below: calculate square root of each number
+          //-- add to list if calculation results in a remainder; i.e. not a perfect square
+          //output includes numbers 66 through 46; stops when it reaches 81, which is a perfect square
+          List<int> wheresSquaredo = (new List<int>()
+          {
+              66, 12, 8, 27, 82, 34, 7, 50, 19, 46, 81, 23, 30, 4, 68, 14
+          }).TakeWhile(num => (Math.Sqrt(num)) % 1 != 0).ToList();
+
+          /* foreach(int num in wheresSquaredo) {
+            Console.WriteLine(num);
+          } */
+
+          /*********USING CUSTOM TYPES*********/
+
+          List<Customer> customers = new List<Customer>() {
+            new Customer(){ Name="Bob Lesman", Balance=80345.66, Bank="FTB"},
+            new Customer(){ Name="Joe Landy", Balance=9284756.21, Bank="WF"},
+            new Customer(){ Name="Meg Ford", Balance=487233.01, Bank="BOA"},
+            new Customer(){ Name="Peg Vale", Balance=7001449.92, Bank="BOA"},
+            new Customer(){ Name="Mike Johnson", Balance=790872.12, Bank="WF"},
+            new Customer(){ Name="Les Paul", Balance=8374892.54, Bank="WF"},
+            new Customer(){ Name="Sid Crosby", Balance=957436.39, Bank="FTB"},
+            new Customer(){ Name="Sarah Ng", Balance=56562389.85, Bank="FTB"},
+            new Customer(){ Name="Tina Fey", Balance=1000000.00, Bank="CITI"},
+            new Customer(){ Name="Sid Brown", Balance=49582.68, Bank="CITI"}
+          };
+
+          // Build a collection of customers who are millionaires
+
+          //method identifies millionaire customers and adds to new report, millionaireReport
+          //lambda operator '=>' separates input (cutsomer) from body on the right
+          //--without 'customer =>' error would be thrown saying 'customer does not exist in current context'
+          List<RichCustomer> millionaireReport = customers.Where(customer => customer.Balance >= 1000000)
+            .Select(customer =>
+              new RichCustomer {
+                Name = customer.Name,
+                Balance = customer.Balance,
+                Bank = customer.Bank
+              }).ToList();
+
+          foreach (RichCustomer cust in millionaireReport) {
+            Console.WriteLine($"{cust.Name} is a millionaire.");
+          }
+
+          /*
+            Given the same customer set, display how many millionaires per bank.
+        */
         }
     }
+
+     public class Customer {
+      public string Name { get; set; }
+      public double Balance { get; set; }
+      public string Bank { get; set; }
+    }
+
+    public class RichCustomer {
+      public string Name { get; set; }
+      public double Balance { get; set; }
+      public string Bank { get; set; }
+    }
+
+    public class MillionaireCount {
+      public string Name { get; set; }
+      public int Count { get; set; }
+    }
+
 } 
 
